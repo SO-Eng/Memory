@@ -69,6 +69,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MemoryCard.cs" />
+    <Compile Include="MemoryPlayground.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -93,6 +95,31 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="pics\apfel.bmp" />
+    <Resource Include="pics\aufgedeckt.bmp" />
+    <Resource Include="pics\birne.bmp" />
+    <Resource Include="pics\blume.bmp" />
+    <Resource Include="pics\blume2.bmp" />
+    <Resource Include="pics\ente.bmp" />
+    <Resource Include="pics\fisch.bmp" />
+    <Resource Include="pics\fuchs.bmp" />
+    <Resource Include="pics\igel.bmp" />
+    <Resource Include="pics\kaenguruh.bmp" />
+    <Resource Include="pics\katze.bmp" />
+    <Resource Include="pics\kuh.bmp" />
+    <Resource Include="pics\maus1.bmp" />
+    <Resource Include="pics\maus2.bmp" />
+    <Resource Include="pics\maus3.bmp" />
+    <Resource Include="pics\maus4.bmp" />
+    <Resource Include="pics\melone.bmp" />
+    <Resource Include="pics\pilz.bmp" />
+    <Resource Include="pics\ronny.bmp" />
+    <Resource Include="pics\schmetterling.bmp" />
+    <Resource Include="pics\sonne.bmp" />
+    <Resource Include="pics\verdeckt.bmp" />
+    <Resource Include="pics\wolke.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -23,6 +23,9 @@ namespace Memory
         public MainWindow()
         {
             InitializeComponent();
+
+            // Instanz zum Spielfeld mit uebergabe des UniformGrids mit dem Bezeichner "playground"
+            new MemoryPlayground(playground);
         }
     }
 }
