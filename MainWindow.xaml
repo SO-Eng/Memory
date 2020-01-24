@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Memory"
         mc:Ignorable="d"
-        Title="Memory" Height="470" Width="465" ResizeMode="NoResize">
+        Title="Memory" Height="470" Width="465" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <UniformGrid x:Name="playground" Height="445" Width="448" Rows="7" Columns="7" Margin="0,0,0,-4">
         
     </UniformGrid>

@@ -25,13 +25,16 @@ namespace Memory
         // ist die Karte noch im Spiel?
         bool inGame;
 
+        // fuer das Spielfeld fuer die Karte
+        MemoryPlayground game;
+
 
         /// <summary>
         /// Der Konstruktor
         /// </summary>
         /// <param name="front">Dateiname des Bildes</param>
         /// <param name="picId">Eindeutige Nummer fuer die Karte</param>
-        public MemoryCard(string front, int picId)
+        public MemoryCard(string front, int picId, MemoryPlayground game)
         {
             // die Vorderseite, der Dateiname des Bildes wird an den Kosntruktor uebergeben
             picFront = new Image();
@@ -51,6 +54,9 @@ namespace Memory
             isTourned = false;
             inGame = true;
 
+            // mit dem Spielfeld verbinden
+            this.game = game;
+
             // die Methode mit dem Ereginis verbinden
             Click += new RoutedEventHandler(ButtonClick);
         }
@@ -60,7 +66,7 @@ namespace Memory
         private void ButtonClick(object sender, RoutedEventArgs e)
         {
             // ist die Karte ueberhaupt noch im Spiel?
-            if (!inGame)
+            if (!inGame || !game.PickAllowed())
             {
                 return;
             }
@@ -69,6 +75,8 @@ namespace Memory
             {
                 Content = picFront;
                 isTourned = true;
+                // die Methode OpenCard() im Spielfeld aufrufen, uebergeben wird dabei die Karte(this)
+                game.OpenCard(this);
             }
         }
 
@@ -94,6 +102,13 @@ namespace Memory
         }
 
 
+        // die Methode zeigt die Vorderseite der Karte an
+        public void ShowFrontSide()
+        {
+            Content = picFront;
+            isTourned = true;
+        }
+
         // die Methode liefert die Bild-ID einer Karte
         public int GetPicID()
         {
@@ -110,6 +125,18 @@ namespace Memory
         public void SetPicPos(int picPos)
         {
             this.picPos = picPos;
+        }
+
+        // die Methode liefert den Wert des Feldes umgedreht
+        public bool GetIsTourned()
+        {
+            return isTourned;
+        }
+
+        // die Methode liefert den Wert des Felds inGame
+        public bool GetInGame()
+        {
+            return inGame;
         }
     }
 }
