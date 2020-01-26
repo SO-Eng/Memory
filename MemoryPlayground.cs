@@ -3,8 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Threading;
+using System.Threading;
 using System.Media;
-using System.Windows.Resources;
 
 namespace Memory
 {
@@ -203,7 +203,8 @@ namespace Memory
             //sound = new SoundPlayer("sounds/tourning.wav");
             sound = new SoundPlayer(Properties.Resources.tourning);
             sound.Play();
-
+            // kleinen Delay nach Sound fuer Karte zeigen
+            Thread.Sleep(220);
 
             // sind 2 Karten umgedereht worden?
             if (tournedCards == 2)
@@ -363,6 +364,7 @@ namespace Memory
                 cards[rnd].ShowFrontSide();
                 OpenCard(cards[rnd]);
 
+                
                 // fuer die zweite Karte muessen wir ausserdem pruefen, ob sie nicht gerade gezeigt wird
                 do
                 {
@@ -400,35 +402,21 @@ namespace Memory
         // das Spiel ist beendet
         private void EndofGame()
         {
-            string over = "Möchtest Du nocheinmal spielen?";
-            string playerWon = "Herzlichen Glückwunsch! \nDu hast gewonnen mit " + playerPoints.ToString() + " zu " + computerPoints.ToString() + " Punkten!";
-            string computerWon = "Schade! \nDu hast gegen den Computer mit " + playerPoints.ToString() + " zu " + computerPoints.ToString() + " Punkten verloren!";
-            string noWinner = "Das war ein sehr knappes Spiel! \nBei einem Punktestand von " + playerPoints.ToString() + " zu " + computerPoints.ToString() + " gab es keinen Gewinner!";
             timer.Stop();
+            MainWindow mW = new MainWindow();
 
-            if (playerPoints > computerPoints)
-            {
-                MessageBox.Show(playerWon, "Sieg!", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            else if (playerPoints < computerPoints)
-            {
-                MessageBox.Show(computerWon, "Verloren!", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            else
-            {
-                MessageBox.Show(noWinner, "Unentschieden!", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            // Spielergebnis anzeigen
+            GameEnd openDialogEnd = new GameEnd(playerPoints, computerPoints);
+            openDialogEnd.ShowDialog();
 
-
-            if (MessageBox.Show(over, "Spiel zuende...", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+            // wurde Ja im GameEndDialog gedrueckt?
+            if (openDialogEnd.DialogResult == true)
             {
-                MainWindow mW = new MainWindow();
                 mW.NewGame();
                 Application.Current.Shutdown();
             }
             else
             {
-                //MessageBox.Show("Das Spiel ist vorbei.");
                 Application.Current.Shutdown();
             }
         }
