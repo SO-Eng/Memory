@@ -5,6 +5,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Threading;
 using System.Threading;
 using System.Media;
+using System.Windows.Media;
 
 namespace Memory
 {
@@ -35,6 +36,7 @@ namespace Memory
         // fuer die Punkte
         int playerPoints, computerPoints;
         Label playerPointsLabel, computerPointsLabel;
+        Button cheat = new Button();
 
         // wie viele Karten sind aktuell umgedreht?
         int tournedCards;
@@ -54,7 +56,7 @@ namespace Memory
         // Timer erzeugen (Instanz)
         DispatcherTimer timer = new DispatcherTimer();
 
-        // Schwierigkeitsgrad des Computers
+        // Schwierigkeitsgrad des Computers (je kleiner, desto schwerer!)
         int difficulty = 1;
 
         // Sound bereitstellen
@@ -160,6 +162,16 @@ namespace Memory
             computerPointsLabel.Content = 0;
             field.Children.Add(computerPointsLabel);
 
+            // Schummelbutton einfuegen;
+            cheat.Content = "Schummeln";
+            cheat.FontSize = 11;
+            cheat.Height = 59;
+            cheat.VerticalAlignment = VerticalAlignment.Top;
+            cheat.Background = new SolidColorBrush(Color.FromRgb(255,222,222));
+
+            //cheat.HorizontalAlignment = HorizontalAlignment.Center;
+            field.Children.Add(cheat);
+
             //StreamResourceInfo sri = Application.GetResourceStream(soundPath);
             sound = new SoundPlayer(Properties.Resources.startingGame);
             sound.Play();
@@ -199,6 +211,7 @@ namespace Memory
             }
             // ummgedrehte Karten erhoehen
             tournedCards++;
+            cheat.IsEnabled = false;
 
             //sound = new SoundPlayer("sounds/tourning.wav");
             sound = new SoundPlayer(Properties.Resources.tourning);
@@ -310,11 +323,13 @@ namespace Memory
             if (player == 0)
             {
                 player = 1;
+                cheat.IsEnabled = false;
                 ComputerGame();
             }
             else
             {
                 player = 0;
+                cheat.IsEnabled = true;
             }
         }
 
