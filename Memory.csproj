@@ -134,7 +134,9 @@
     <None Include="Resources\tourning.wav" />
     <None Include="Resources\startingGame.wav" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="settings\gear.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="gameEnd\lose.png" />
     <Resource Include="gameEnd\trophy.png" />

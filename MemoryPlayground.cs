@@ -6,6 +6,7 @@ using System.Windows.Threading;
 using System.Threading;
 using System.Media;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Memory
 {
@@ -37,6 +38,8 @@ namespace Memory
         int playerPoints, computerPoints;
         Label playerPointsLabel, computerPointsLabel;
         Button cheat = new Button();
+        Button settings = new Button();
+        Image picSettings;
 
         // wie viele Karten sind aktuell umgedreht?
         int tournedCards;
@@ -171,14 +174,32 @@ namespace Memory
             cheat.Height = 59;
             cheat.VerticalAlignment = VerticalAlignment.Top;
             cheat.Background = new SolidColorBrush(Color.FromRgb(255,222,222));
-
-            //cheat.HorizontalAlignment = HorizontalAlignment.Center;
             field.Children.Add(cheat);
             cheat.Click += new RoutedEventHandler(CheatButtonClick);
+
+            Label free = new Label();
+            field.Children.Add(free);
+
+            // Settingsbutton einfuegen;
+            picSettings = new Image();
+            picSettings.Source = new BitmapImage(new Uri("settings/gear.png", UriKind.Relative));
+            settings.Content = picSettings;
+            settings.Height = 59;
+            settings.VerticalAlignment = VerticalAlignment.Top;
+            settings.Background = null;
+            settings.BorderBrush = null;
+            settings.ToolTip = "Einstellungen";
+            field.Children.Add(settings);
+            settings.Click += new RoutedEventHandler(SettingsButtonClick);
 
             //StreamResourceInfo sri = Application.GetResourceStream(soundPath);
             sound = new SoundPlayer(Properties.Resources.startingGame);
             sound.Play();
+        }
+
+        private void SettingsButtonClick(object sender, RoutedEventArgs e)
+        {
+            //throw new NotImplementedException();
         }
 
         // Schummelfunktion deckt alle Karten auf, die noch nicht aus dem Spiel sind
