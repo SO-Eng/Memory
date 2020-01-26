@@ -27,5 +27,10 @@ namespace Memory
             // Instanz zum Spielfeld mit uebergabe des UniformGrids mit dem Bezeichner "playground"
             new MemoryPlayground(playground);
         }
+
+        public void NewGame()
+        {
+            System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+        }
     }
 }

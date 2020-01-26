@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Threading;
+using System.Media;
+using System.Windows.Resources;
 
 namespace Memory
 {
@@ -53,12 +55,16 @@ namespace Memory
         DispatcherTimer timer = new DispatcherTimer();
 
         // Schwierigkeitsgrad des Computers
-        int difficulty = 10;
+        int difficulty = 1;
+
+        // Sound bereitstellen
+        SoundPlayer sound;
+        //Uri soundPath = new Uri(@"pack://Application:,,,/MyAssembly;component/sounds/lost.wav");
 
         /// <summary>
         /// Der Kosntruktor fuer das Spielfeld.
         /// </summary>
-        /// <param name="field"></param>
+        /// <param name="field">Hier wird das Spielfeld (UniformGrid) uebergeben.</param>
         public MemoryPlayground(UniformGrid field)
         {
             // Zufallszahl generieren
@@ -153,6 +159,10 @@ namespace Memory
             computerPointsLabel = new Label();
             computerPointsLabel.Content = 0;
             field.Children.Add(computerPointsLabel);
+
+            //StreamResourceInfo sri = Application.GetResourceStream(soundPath);
+            sound = new SoundPlayer(Properties.Resources.startingGame);
+            sound.Play();
         }
 
 
@@ -190,6 +200,11 @@ namespace Memory
             // ummgedrehte Karten erhoehen
             tournedCards++;
 
+            //sound = new SoundPlayer("sounds/tourning.wav");
+            sound = new SoundPlayer(Properties.Resources.tourning);
+            sound.Play();
+
+
             // sind 2 Karten umgedereht worden?
             if (tournedCards == 2)
             {
@@ -201,7 +216,7 @@ namespace Memory
             }
 
             // haben wir zusammen 21 Paare, dann ist das Spiel beendent
-            if (computerPoints + playerPoints == 21)
+            if (computerPoints + playerPoints == 2)
             {
                 EndofGame();
             }
@@ -211,8 +226,6 @@ namespace Memory
         // die methode prueft, ob ein Paar gefunden wurde
         private void ProofPair(int cardId)
         {
-            //bool isPair = false;
-
             if (pair[0].GetPicID() == pair[1].GetPicID())
             {
                 //die Punkte setzen
@@ -220,6 +233,16 @@ namespace Memory
                 // die Karten aus dem Gedaechtnis loeschen
                 rememberCards[0, cardId] = -2;
                 rememberCards[1, cardId] = -2;
+
+                //sound = new SoundPlayer("sounds/pairFound.wav");
+                sound = new SoundPlayer(Properties.Resources.pairFound);
+                sound.Play();
+            }
+            else
+            {
+                //sound = new SoundPlayer("sounds/lost.wav");
+                sound = new SoundPlayer(Properties.Resources.lost);
+                sound.Play();
             }
         }
 
@@ -377,9 +400,37 @@ namespace Memory
         // das Spiel ist beendet
         private void EndofGame()
         {
-            MessageBox.Show("Das Spiel ist vorbei.");
+            string over = "Möchtest Du nocheinmal spielen?";
+            string playerWon = "Herzlichen Glückwunsch! \nDu hast gewonnen mit " + playerPoints.ToString() + " zu " + computerPoints.ToString() + " Punkten!";
+            string computerWon = "Schade! \nDu hast gegen den Computer mit " + playerPoints.ToString() + " zu " + computerPoints.ToString() + " Punkten verloren!";
+            string noWinner = "Das war ein sehr knappes Spiel! \nBei einem Punktestand von " + playerPoints.ToString() + " zu " + computerPoints.ToString() + " gab es keinen Gewinner!";
             timer.Stop();
-            Application.Current.Shutdown();
+
+            if (playerPoints > computerPoints)
+            {
+                MessageBox.Show(playerWon, "Sieg!", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else if (playerPoints < computerPoints)
+            {
+                MessageBox.Show(computerWon, "Verloren!", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show(noWinner, "Unentschieden!", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
+
+            if (MessageBox.Show(over, "Spiel zuende...", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+            {
+                MainWindow mW = new MainWindow();
+                mW.NewGame();
+                Application.Current.Shutdown();
+            }
+            else
+            {
+                //MessageBox.Show("Das Spiel ist vorbei.");
+                Application.Current.Shutdown();
+            }
         }
     }
 }

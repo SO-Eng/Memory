@@ -121,5 +121,11 @@
     <Resource Include="pics\verdeckt.bmp" />
     <Resource Include="pics\wolke.bmp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pairFound.wav" />
+    <None Include="Resources\lost.wav" />
+    <None Include="Resources\tourning.wav" />
+    <None Include="Resources\startingGame.wav" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
