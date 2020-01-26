@@ -55,13 +55,14 @@ namespace Memory
 
         // Timer erzeugen (Instanz)
         DispatcherTimer timer = new DispatcherTimer();
+        DispatcherTimer cheatTimer = new DispatcherTimer();
 
         // Schwierigkeitsgrad des Computers (je kleiner, desto schwerer!)
-        int difficulty = 1;
+        int difficulty = 10;
 
         // Sound bereitstellen
         SoundPlayer sound;
-        //Uri soundPath = new Uri(@"pack://Application:,,,/MyAssembly;component/sounds/lost.wav");
+
 
         /// <summary>
         /// Der Kosntruktor fuer das Spielfeld.
@@ -144,8 +145,10 @@ namespace Memory
 
             // das Intervall setzen
             timer.Interval = TimeSpan.FromMilliseconds(2000);
+            cheatTimer.Interval = TimeSpan.FromSeconds(4);
             // die Methode fuer das Ereignis zuwesien
             timer.Tick += new EventHandler(TimerTick);
+            cheatTimer.Tick += new EventHandler(TimerCheat);
 
             // die Labels fuer die Punkte
             Label human = new Label();
@@ -171,17 +174,48 @@ namespace Memory
 
             //cheat.HorizontalAlignment = HorizontalAlignment.Center;
             field.Children.Add(cheat);
+            cheat.Click += new RoutedEventHandler(CheatButtonClick);
 
             //StreamResourceInfo sri = Application.GetResourceStream(soundPath);
             sound = new SoundPlayer(Properties.Resources.startingGame);
             sound.Play();
         }
 
+        // Schummelfunktion deckt alle Karten auf, die noch nicht aus dem Spiel sind
+        private void CheatButtonClick(object sender, RoutedEventArgs e)
+        {
+            //MessageBox.Show("Test");
+            for (int i = 0; i <= 41; i++)
+            {
+                if (cards[i].GetInGame())
+                {
+                    cards[i].ShowFrontSide();
+                }
+            }
+            cheatTimer.Start();
+        }
+
+        // Karten nach ablauf der Zeit wieder umdrehen (Schummelfunktion)
+        private void TimerCheat(object sender, EventArgs e)
+        {
+            bool turnBack = false;
+            cheatTimer.Stop();
+
+            for (int i = 0; i <= 41; i++)
+            {
+                if (cards[i].GetInGame())
+                {
+                    cards[i].ShowBackside(turnBack);
+                }
+            }
+
+        }
+
 
         /// <summary>
         /// In dieser Methode wird die wesentliche Steuerung uebernommen
         /// </summary>
-        /// <param name="card">Bekommt die Karte aus MemoryCard Klasse</param>
+        /// <param name="card">Bekommt die Karte aus der MemoryCard Klasse</param>
         public void OpenCard(MemoryCard card)
         {
             // zum zwischenspeichern der ID und der Position
@@ -230,7 +264,7 @@ namespace Memory
             }
 
             // haben wir zusammen 21 Paare, dann ist das Spiel beendent
-            if (computerPoints + playerPoints == 2)
+            if (computerPoints + playerPoints == 21)
             {
                 EndofGame();
             }
@@ -268,6 +302,7 @@ namespace Memory
             {
                 playerPoints++;
                 playerPointsLabel.Content = playerPoints.ToString();
+                cheat.IsEnabled = true;
             }
             else
             {
@@ -414,10 +449,12 @@ namespace Memory
             return allowed;
         }
 
+
         // das Spiel ist beendet
         private void EndofGame()
         {
             timer.Stop();
+            cheatTimer.Stop();
             MainWindow mW = new MainWindow();
 
             // Spielergebnis anzeigen

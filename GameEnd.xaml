@@ -8,7 +8,7 @@
         Title="Spiel zuende" Height="360" Width="360" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid x:Name="testGrid">
         <Button x:Name="buttonYes" Content="Ja" HorizontalAlignment="Left" Margin="75,286,0,0" VerticalAlignment="Top" Width="75" Click="ButtonYes_Click"/>
-        <Button x:Name="buttonNo" Content="Nein" Margin="204,286,75,0" VerticalAlignment="Top" Click="ButtonNo_Click"/>
+        <Button x:Name="buttonNo" Content="Nein" Margin="204,286,75,0" VerticalAlignment="Top" Click="ButtonNo_Click" Width="75"/>
         <Image x:Name="imageResult" HorizontalAlignment="Left" Height="100" Margin="41,36,0,0" VerticalAlignment="Top" Width="100"/>
         <Label x:Name="labelCustomText" HorizontalAlignment="Left" Margin="158,36,0,0" VerticalAlignment="Top" Width="160" Height="100">
             <TextBlock x:Name="textBlockCustomtext" TextWrapping="WrapWithOverflow"></TextBlock>

@@ -28,6 +28,7 @@ namespace Memory
             new MemoryPlayground(playground);
         }
 
+        // Wenn der User entschiedet noch einmal zu spielen, wird diese Methode ausgefuehrt.
         public void NewGame()
         {
             System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
