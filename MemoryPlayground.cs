@@ -16,7 +16,7 @@ namespace Memory
     class MemoryPlayground
     {
         // Fields
-        MemoryCard[] cards;
+        static MemoryCard[] cards;
 
         // das Array fuer die Namen der pics
         string[] pics =
@@ -61,7 +61,7 @@ namespace Memory
         DispatcherTimer cheatTimer = new DispatcherTimer();
 
         // Schwierigkeitsgrad des Computers (je kleiner, desto schwerer!)
-        int difficulty = 10;
+        static int difficulty;
 
         // Sound bereitstellen
         SoundPlayer sound;
@@ -192,6 +192,9 @@ namespace Memory
             field.Children.Add(settings);
             settings.Click += new RoutedEventHandler(SettingsButtonClick);
 
+            // Schwierigkeitsgrad setzen
+            difficulty = 100;
+
             //StreamResourceInfo sri = Application.GetResourceStream(soundPath);
             sound = new SoundPlayer(Properties.Resources.startingGame);
             sound.Play();
@@ -199,7 +202,19 @@ namespace Memory
 
         private void SettingsButtonClick(object sender, RoutedEventArgs e)
         {
-            //throw new NotImplementedException();
+
+            SettingsMem settings = new SettingsMem();
+            settings.ShowDialog();
+        }
+
+        public static void SetDifficulty(int dc)
+        {
+            difficulty = dc;
+        }
+
+        public static int GetDefficulty()
+        {
+            return difficulty;
         }
 
         // Schummelfunktion deckt alle Karten auf, die noch nicht aus dem Spiel sind
@@ -219,8 +234,13 @@ namespace Memory
         // Karten nach ablauf der Zeit wieder umdrehen (Schummelfunktion)
         private void TimerCheat(object sender, EventArgs e)
         {
-            bool turnBack = false;
             cheatTimer.Stop();
+            TurnCardsBack();
+        }
+
+        public static void TurnCardsBack()
+        {
+            bool turnBack = false;
 
             for (int i = 0; i <= 41; i++)
             {
@@ -229,9 +249,7 @@ namespace Memory
                     cards[i].ShowBackside(turnBack);
                 }
             }
-
         }
-
 
         /// <summary>
         /// In dieser Methode wird die wesentliche Steuerung uebernommen
@@ -400,7 +418,7 @@ namespace Memory
 
             // erst einmal nach einem Paar suchen, dazu durchsuchen wir das Array rememberdCards, bis wir
             // in beiden Dimensionen einen Wert fuer eine Karte finden
-            if (rndNum.Next(difficulty) == 0)
+            if (rndNum.Next(difficulty) <= 10)
             {
                 while ((cardCounter < 21) && (!strike))
                 {

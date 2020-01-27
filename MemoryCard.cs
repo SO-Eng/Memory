@@ -25,6 +25,15 @@ namespace Memory
         // ist die Karte noch im Spiel?
         bool inGame;
 
+        string[] cardCover =
+        {
+            "cardcovers/verdeckt.bmp",
+            "cardcovers/ko.png",
+            "cardcovers/soe.png",
+        };
+
+        static int cCFromSettings;
+
         // fuer das Spielfeld fuer die Karte
         MemoryPlayground game;
 
@@ -42,7 +51,7 @@ namespace Memory
 
             // die Rueckseite, sie wird fest gesetzt
             picBack = new Image();
-            picBack.Source = new BitmapImage(new Uri("pics/verdeckt.bmp", UriKind.Relative));
+            picBack.Source = new BitmapImage(new Uri(cardCover[cCFromSettings], UriKind.Relative));
 
             // die Eigenschaften zuweisen
             Content = picBack;
@@ -96,6 +105,7 @@ namespace Memory
             else
             {
                 // sonst nur die Rueckseite zeigen
+                picBack.Source = new BitmapImage(new Uri(cardCover[cCFromSettings], UriKind.Relative));
                 Content = picBack;
                 isTourned = false;
             }
@@ -137,6 +147,18 @@ namespace Memory
         public bool GetInGame()
         {
             return inGame;
+        }
+
+        // die Methode setzt den Wert fuer die Kartenrueckseite
+        public static void SetCoverCard(int cC)
+        {
+            cCFromSettings = cC;
+        }
+
+        // die Methode setzt den Wert fuer die Coverrueckseite
+        public static int GetCoverCard()
+        {
+            return cCFromSettings;
         }
     }
 }
