@@ -5,6 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Memory"
         mc:Ignorable="d"
-        Title="Memory" Height="478.981" Width="465" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="Memory" Height="478.981" Width="465" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closed="Window_Closed" Icon="icon/memory.ico">
     <UniformGrid x:Name="playground" Height="445" Width="448" Rows="7" Columns="7" Margin="0,0,0,0"/>
 </Window>

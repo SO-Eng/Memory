@@ -27,9 +27,9 @@ namespace Memory
 
         string[] cardCover =
         {
-            "cardcovers/verdeckt.bmp",
-            "cardcovers/ko.png",
-            "cardcovers/soe.png",
+            "cardcovers/verdeckt.bmp", "cardcovers/ko.png",
+            "cardcovers/soe.png", "cardcovers/hStone01.png",
+            "cardcovers/hStone02.png", "cardcovers/hStone03.png",
         };
 
         static int cCFromSettings;

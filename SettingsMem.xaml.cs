@@ -20,8 +20,6 @@ namespace Memory
     public partial class SettingsMem : Window
     {
         // Fields
-        int picCoverCard;
-
         int difficulty;
         int hard = 20;
         int middle = 40;
@@ -32,13 +30,14 @@ namespace Memory
         {
             InitializeComponent();
 
-            if (MemoryPlayground.GetDefficulty() == 0)
+            // Slider der aktuellen Schwiereigkeitseinstellung anpassen
+            if (MemoryPlayground.Difficulty == 0)
             {
                 sliderDifficulty.Value = 1;
             }
             else
             {
-                difficulty = MemoryPlayground.GetDefficulty();
+                difficulty = MemoryPlayground.Difficulty;
                 if (difficulty == soft)
                 {
                     sliderDifficulty.Value = 1;
@@ -52,31 +51,56 @@ namespace Memory
                     sliderDifficulty.Value = 3;
                 }
             }
-        }
 
-
-        private void SliderValue()
-        {
-            if (sliderDifficulty.Value == 1)
+            // Schummeloption der aktuellen Einstellung anpassen
+            if (MemoryPlayground.CheatButton)
             {
-                MemoryPlayground.SetDifficulty(soft);
-            }
-            else if (sliderDifficulty.Value == 2)
-            {
-                MemoryPlayground.SetDifficulty(middle);
+                rbCheatOn.IsChecked = true;
             }
             else
             {
-                MemoryPlayground.SetDifficulty(hard);
+                rbCheatOff.IsChecked = true;
+            }
+
+            // Soundoptionen den aktuellen Einstellungen anpassen
+            if (MemoryPlayground.SoundSettings)
+            {
+                rbSoundOn.IsChecked = true;
+            }
+            else
+            {
+                rbSoundOff.IsChecked = true;
             }
         }
 
+
+        // Methode fuer das schliessen des Fensters
         private void ButtonOK_Click(object sender, RoutedEventArgs e)
         {
             SliderValue();
             Close();
         }
 
+
+        // Methode fuer das Schwieriegkeitsgrad setzen
+        private void SliderValue()
+        {
+            if (sliderDifficulty.Value == 1)
+            {
+                MemoryPlayground.Difficulty = soft;
+            }
+            else if (sliderDifficulty.Value == 2)
+            {
+                MemoryPlayground.Difficulty = middle;
+            }
+            else
+            {
+                MemoryPlayground.Difficulty = hard;
+            }
+        }
+
+
+        // Buttins fuer die Kartenrueckenauswahl
         private void ButtonCc1_Click(object sender, RoutedEventArgs e)
         {
             MemoryCard.SetCoverCard(0);
@@ -93,6 +117,51 @@ namespace Memory
         {
             MemoryCard.SetCoverCard(2);
             MemoryPlayground.TurnCardsBack();
+        }
+
+        private void ButtonCc4_Click(object sender, RoutedEventArgs e)
+        {
+            MemoryCard.SetCoverCard(3);
+            MemoryPlayground.TurnCardsBack();
+        }
+
+        private void ButtonCc5_Click(object sender, RoutedEventArgs e)
+        {
+            MemoryCard.SetCoverCard(4);
+            MemoryPlayground.TurnCardsBack();
+        }
+
+        private void ButtonCc6_Click(object sender, RoutedEventArgs e)
+        {
+            MemoryCard.SetCoverCard(5);
+            MemoryPlayground.TurnCardsBack();
+        }
+
+
+        // RadioButtons fuer die Schummeleinstellung
+        private void RbCheatOff_Click(object sender, RoutedEventArgs e)
+        {
+            MemoryPlayground.CheatButton = false;
+            MemoryPlayground.SetCheatButton();
+        }
+
+        private void RbCheatOn_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Du konntest wohl als Kind schon nicht verlieren?", "Schummeln!!!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            MemoryPlayground.CheatButton = true;
+            MemoryPlayground.SetCheatButton();
+        }
+
+
+        // RadioButtons fuer die Soundeinstellung
+        private void RbSoundOn_Click(object sender, RoutedEventArgs e)
+        {
+            MemoryPlayground.SoundSettings = true;
+        }
+
+        private void RbSoundOff_Click(object sender, RoutedEventArgs e)
+        {
+            MemoryPlayground.SoundSettings = false;
         }
     }
 }

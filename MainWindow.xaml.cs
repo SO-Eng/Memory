@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
 namespace Memory
 {
     /// <summary>
@@ -20,6 +21,9 @@ namespace Memory
     /// </summary>
     public partial class MainWindow : Window
     {
+        // Fields
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -32,6 +36,11 @@ namespace Memory
         public void NewGame()
         {
             System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            MemoryPlayground.SaveSettings();
         }
     }
 }

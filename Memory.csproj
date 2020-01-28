@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon\memory.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -142,9 +145,6 @@
     <None Include="Resources\startingGame.wav" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="settings\gear.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="gameEnd\lose.png" />
     <Resource Include="gameEnd\trophy.png" />
   </ItemGroup>
@@ -159,6 +159,17 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="cardcovers\soe.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="cardcovers\hStone01.png" />
+    <Resource Include="cardcovers\hStone02.png" />
+    <Resource Include="cardcovers\hStone03.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="settings\settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icon\memory.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

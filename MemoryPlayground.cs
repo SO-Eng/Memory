@@ -7,6 +7,7 @@ using System.Threading;
 using System.Media;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Microsoft.Win32;
 
 namespace Memory
 {
@@ -37,7 +38,7 @@ namespace Memory
         // fuer die Punkte
         int playerPoints, computerPoints;
         Label playerPointsLabel, computerPointsLabel;
-        Button cheat = new Button();
+        static Button cheat = new Button();
         Button settings = new Button();
         Image picSettings;
 
@@ -61,10 +62,56 @@ namespace Memory
         DispatcherTimer cheatTimer = new DispatcherTimer();
 
         // Schwierigkeitsgrad des Computers (je kleiner, desto schwerer!)
-        static int difficulty;
+        //static int difficulty;
+        private static int _difficulty;
+
+        public static int Difficulty
+        {
+            get
+            {
+                return _difficulty;
+            }
+            set
+            {
+                _difficulty = value;
+            }
+        }
+
+        // Schummelbutten aktiv oder nicht
+        private static bool _cheatButton;
+
+        public static bool CheatButton
+        {
+            get
+            {
+                return _cheatButton;
+            }
+            set
+            {
+                _cheatButton = value;
+            }
+        }
+
+        // Sound aktiv oder nicht
+        private static bool _soundSettings;
+
+        public static bool SoundSettings
+        {
+            get
+            {
+                return _soundSettings;
+            }
+            set
+            {
+                _soundSettings = value;
+            }
+        }
 
         // Sound bereitstellen
-        SoundPlayer sound;
+        static SoundPlayer sound;
+
+        // Pfad zur Registry
+        private static string regPath = @"Software\ILS\Memory";
 
 
         /// <summary>
@@ -100,6 +147,22 @@ namespace Memory
 
             // das Spielfeld setzen
             this.field = field;
+
+            // Einstellungen laden
+            using (RegistryKey regkey = Registry.CurrentUser.OpenSubKey(regPath))
+            {
+                if (regkey != null)
+                {
+                    LoadSettings(regkey);
+                }
+                else
+                {
+                    _difficulty = 100;
+                    _cheatButton = false;
+                    _soundSettings = true;
+                    MemoryCard.SetCoverCard(0);
+                }
+            }
 
             // es gibt keine gemerkte Karten
             for (int outside = 0; outside < 2; outside++)
@@ -173,16 +236,18 @@ namespace Memory
             cheat.FontSize = 11;
             cheat.Height = 59;
             cheat.VerticalAlignment = VerticalAlignment.Top;
-            cheat.Background = new SolidColorBrush(Color.FromRgb(255,222,222));
+            cheat.Background = new SolidColorBrush(Color.FromRgb(255, 222, 222));
             field.Children.Add(cheat);
             cheat.Click += new RoutedEventHandler(CheatButtonClick);
+
+            SetCheatButton();
 
             Label free = new Label();
             field.Children.Add(free);
 
             // Settingsbutton einfuegen;
             picSettings = new Image();
-            picSettings.Source = new BitmapImage(new Uri("settings/gear.png", UriKind.Relative));
+            picSettings.Source = new BitmapImage(new Uri("settings/settings.png", UriKind.Relative));
             settings.Content = picSettings;
             settings.Height = 59;
             settings.VerticalAlignment = VerticalAlignment.Top;
@@ -192,30 +257,18 @@ namespace Memory
             field.Children.Add(settings);
             settings.Click += new RoutedEventHandler(SettingsButtonClick);
 
-            // Schwierigkeitsgrad setzen
-            difficulty = 100;
-
             //StreamResourceInfo sri = Application.GetResourceStream(soundPath);
             sound = new SoundPlayer(Properties.Resources.startingGame);
-            sound.Play();
+            SoundOnOff();
         }
+
 
         private void SettingsButtonClick(object sender, RoutedEventArgs e)
         {
-
             SettingsMem settings = new SettingsMem();
             settings.ShowDialog();
         }
 
-        public static void SetDifficulty(int dc)
-        {
-            difficulty = dc;
-        }
-
-        public static int GetDefficulty()
-        {
-            return difficulty;
-        }
 
         // Schummelfunktion deckt alle Karten auf, die noch nicht aus dem Spiel sind
         private void CheatButtonClick(object sender, RoutedEventArgs e)
@@ -288,7 +341,7 @@ namespace Memory
 
             //sound = new SoundPlayer("sounds/tourning.wav");
             sound = new SoundPlayer(Properties.Resources.tourning);
-            sound.Play();
+            SoundOnOff();
             // kleinen Delay nach Sound fuer Karte zeigen
             Thread.Sleep(220);
 
@@ -323,13 +376,13 @@ namespace Memory
 
                 //sound = new SoundPlayer("sounds/pairFound.wav");
                 sound = new SoundPlayer(Properties.Resources.pairFound);
-                sound.Play();
+                SoundOnOff();
             }
             else
             {
                 //sound = new SoundPlayer("sounds/lost.wav");
                 sound = new SoundPlayer(Properties.Resources.lost);
-                sound.Play();
+                SoundOnOff();
             }
         }
 
@@ -341,7 +394,7 @@ namespace Memory
             {
                 playerPoints++;
                 playerPointsLabel.Content = playerPoints.ToString();
-                cheat.IsEnabled = true;
+                SetCheatButton();
             }
             else
             {
@@ -403,7 +456,7 @@ namespace Memory
             else
             {
                 player = 0;
-                cheat.IsEnabled = true;
+                SetCheatButton();
             }
         }
 
@@ -418,7 +471,7 @@ namespace Memory
 
             // erst einmal nach einem Paar suchen, dazu durchsuchen wir das Array rememberdCards, bis wir
             // in beiden Dimensionen einen Wert fuer eine Karte finden
-            if (rndNum.Next(difficulty) <= 10)
+            if (rndNum.Next(_difficulty) <= 10)
             {
                 while ((cardCounter < 21) && (!strike))
                 {
@@ -489,6 +542,32 @@ namespace Memory
         }
 
 
+        // Methode um Schummeln zu aktivieren oder deaktivieren
+        public static void SetCheatButton()
+        {
+            if (_cheatButton)
+            {
+                cheat.IsEnabled = true;
+            }
+            else
+            {
+                cheat.IsEnabled = false;
+            }
+        }
+
+        // Methode zum Sound abspielen oder stumm bleiben
+        public static void SoundOnOff()
+        {
+            if (_soundSettings)
+            {
+                sound.Play();
+            }
+            else
+            {
+                return;
+            }
+        }
+
         // das Spiel ist beendet
         private void EndofGame()
         {
@@ -510,6 +589,31 @@ namespace Memory
             {
                 Application.Current.Shutdown();
             }
+        }
+
+
+        // Methode zum speichern der Einstellungen in der registry
+        internal static void SaveSettings()
+        {
+            using (RegistryKey regKey = Registry.CurrentUser.CreateSubKey(regPath))
+            {
+                regKey.SetValue("Difficulty", _difficulty);
+                regKey.SetValue("Sound", _soundSettings);
+                regKey.SetValue("CheatSettings", _cheatButton);
+                regKey.SetValue("Cardcover", MemoryCard.GetCoverCard());
+            }
+        }
+
+        /// <summary>
+        /// Methode zum laden der Einstellungen aus der Registry
+        /// </summary>
+        /// <param name="_regKey">Bekommt die vereinbarung fuer den RegistryKey aus dem Konstruktor uebergeben.</param>
+        private void LoadSettings(RegistryKey _regKey)
+        {
+            _difficulty = Convert.ToInt32(_regKey.GetValue("Difficulty"));
+            _soundSettings = Convert.ToBoolean(_regKey.GetValue("Sound"));
+            _cheatButton = Convert.ToBoolean(_regKey.GetValue("CheatSettings"));
+            MemoryCard.SetCoverCard(Convert.ToInt32(_regKey.GetValue("CardCover")));
         }
     }
 }
