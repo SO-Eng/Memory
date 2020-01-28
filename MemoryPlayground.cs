@@ -291,6 +291,7 @@ namespace Memory
             TurnCardsBack();
         }
 
+        // statisch um Kartenruecken aendern zu koennen
         public static void TurnCardsBack()
         {
             bool turnBack = false;
@@ -303,6 +304,7 @@ namespace Memory
                 }
             }
         }
+
 
         /// <summary>
         /// In dieser Methode wird die wesentliche Steuerung uebernommen
